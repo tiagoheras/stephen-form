@@ -7,6 +7,7 @@ function createContact() {
 
     const contactDiv = document.createElement('div');
     contactDiv.id = `contact-${contactCount}`;
+    contactDiv.className = 'contact';
 
     let addressCount = 1;
 
@@ -15,6 +16,10 @@ function createContact() {
     heading.innerText = `Contact Nº ${contactCount}`;
 
     contactDiv.appendChild(heading);
+    if (contactCount > 1) {
+        console.log(contactCount);
+        contactDiv.appendChild(createCloseBtn());
+    }
     contactDiv.appendChild(createFormSection('Business Partner Details', ['Business Partner Name', 'Type', 'Trade', 'Reg Number', 'VAT Number', 'Credit', 'Discount', 'Uplift', 'Rebate']));
     contactDiv.appendChild(createFormSection('Supplier Account Details', ['Supplier Account Number', 'Bank Name', 'Bank Account Number', 'Sort Code']));
     contactDiv.appendChild(createFormSection('Primary Contact', ['First Name', 'Last Name', 'Position', 'Telephone', 'Mobile', 'Email']));
@@ -33,7 +38,7 @@ function createContact() {
 
     contactDiv.appendChild(addressBtn);
 
-    form.appendChild(createButtons());
+    createButtons();
 }
 
 function formatText(text) {
@@ -41,14 +46,11 @@ function formatText(text) {
 }
 
 function createButtons() {
-    const btnContainer = document.createElement('div');
-    btnContainer.className = 'btn-container';
-
     const submitBtn = document.createElement('button');
     submitBtn.innerText = 'Submit';
 
     const addContact = document.createElement('button');
-    addContact.innerText = 'Add Other Contact';
+    addContact.innerText = 'New Contact';
 
     submitBtn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -65,10 +67,19 @@ function createButtons() {
         createContact();
     })
 
-    btnContainer.appendChild(submitBtn);
-    btnContainer.appendChild(addContact);
+    form.appendChild(addContact);
+    form.appendChild(submitBtn);
+}
 
-    return btnContainer;
+function createCloseBtn() {
+    const closeBtn = document.createElement('button');
+    closeBtn.innerText = 'X';
+    closeBtn.className = 'close-btn';
+    closeBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        closeBtn.parentNode.remove();
+    })
+    return closeBtn
 }
 
 function createFormSection(title, fields, type) {
@@ -80,21 +91,12 @@ function createFormSection(title, fields, type) {
 
     if (type === 'address') {
         section.className = 'account-address';
-
-        const closeBtn = document.createElement('button');
-        closeBtn.innerText = 'X';
-        closeBtn.className = 'close-btn';
-        closeBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            section.remove();
-        })
-
-        section.appendChild(closeBtn);
+        section.appendChild(createCloseBtn());
     }
 
     const fieldsContainer = document.createElement('div');
     fieldsContainer.className = "fields-container";
-    
+
     section.appendChild(header);
     section.appendChild(fieldsContainer);
 
