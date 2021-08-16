@@ -2,34 +2,38 @@ const form = document.querySelector('form');
 
 let contactCount = 0;
 
-function loadContactForm() {
+function createContact() {
     contactCount += 1;
 
     const contactDiv = document.createElement('div');
     contactDiv.id = `contact-${contactCount}`;
 
-    const header = document.createElement('h1');
-    header.className = 'contact-header';
-    header.innerText = `Contact Nº ${contactCount}`;
-
     let addressCount = 1;
 
-    const addressBtn = document.createElement('button');
-    addressBtn.innerText = 'Add New Address';
-    addressBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        addressCount += 1;
-        contactDiv.appendChild(createFormSection(`Account Address ${addressCount}`, ['Address Line 1', 'Address Line 2', 'Address Line 3', 'City', 'Country', 'Postcode']));
-    })
+    const heading = document.createElement('h1');
+    heading.className = 'contact-heading';
+    heading.innerText = `Contact Nº ${contactCount}`;
 
-    contactDiv.appendChild(header);
+    contactDiv.appendChild(heading);
     contactDiv.appendChild(createFormSection('Business Partner Details', ['Business Partner Name', 'Type', 'Trade', 'Reg Number', 'VAT Number', 'Credit', 'Discount', 'Uplift', 'Rebate']));
     contactDiv.appendChild(createFormSection('Supplier Account Details', ['Supplier Account Number', 'Bank Name', 'Bank Account Number', 'Sort Code']));
     contactDiv.appendChild(createFormSection('Primary Contact', ['First Name', 'Last Name', 'Position', 'Telephone', 'Mobile', 'Email']));
-    contactDiv.appendChild(createFormSection(`Account Address ${addressCount}`, ['Address Line 1', 'Address Line 2', 'Address Line 3', 'City', 'Country', 'Postcode']));
-    contactDiv.appendChild(addressBtn);
+    contactDiv.appendChild(createFormSection(`Account Address ${addressCount}`, ['Address Line 1', 'Address Line 2', 'Address Line 3', 'City', 'Country', 'Postcode'], 'address'));
+
+    const addressBtn = document.createElement('button');
+    addressBtn.innerText = 'Add Address';
 
     form.appendChild(contactDiv);
+
+    addressBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        addressCount = contactDiv.querySelectorAll('section.account-address').length + 1;
+        const addressSection = createFormSection(`Account Address ${addressCount}`, ['Address Line 1', 'Address Line 2', 'Address Line 3', 'City', 'Country', 'Postcode'], 'address');
+        contactDiv.insertBefore(addressSection, addressBtn);
+    })
+
+    contactDiv.appendChild(addressBtn);
+
     form.appendChild(createButtons());
 }
 
@@ -52,14 +56,14 @@ function createButtons() {
         const obj = {};
         const data = new FormData(document.forms[0]);
         const value = Object.fromEntries(data.entries());
-        console.log({value});
+        console.log({ value });
     })
 
     addContact.addEventListener('click', (e) => {
         e.preventDefault();
         submitBtn.remove();
         addContact.remove();
-        loadContactForm();
+        createContact();
     })
 
     btnContainer.appendChild(submitBtn);
@@ -68,14 +72,34 @@ function createButtons() {
     return btnContainer;
 }
 
-function createFormSection(title, fields) {
+function createFormSection(title, fields, type) {
     const section = document.createElement('section');
-    section.id = formatText(title);
-
     const header = document.createElement('h2');
-    header.innerText = title;
+
+    if (type === 'address') {
+        section.id = formatText(title);
+        section.className = 'account-address';
+        header.innerText = title;
+
+        const closeBtn = document.createElement('button');
+        closeBtn.innerText = 'X';
+        closeBtn.className = 'close-btn';
+        closeBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            section.remove();
+        })
+
+        section.appendChild(closeBtn);
+    } else {
+        section.id = formatText(title);
+        header.innerText = title;
+    }
+
+    const fieldsContainer = document.createElement('div');
+    fieldsContainer.className = "fields-container";
 
     section.appendChild(header);
+    section.appendChild(fieldsContainer);
 
     fields.forEach(field => {
         const fieldContainer = document.createElement('div');
@@ -86,14 +110,19 @@ function createFormSection(title, fields) {
         label.innerText = field;
 
         const input = document.createElement('input');
-        input.name = `contact[${contactCount}][${formatText(field)}]`;
+
+        if (type === 'address') {
+            input.name = `contact[${contactCount}]address[${title.charAt(title.length - 1)}][${formatText(field)}]`;
+        } else {
+            input.name = `contact[${contactCount}][${formatText(field)}]`;
+        }
 
         fieldContainer.appendChild(label);
         fieldContainer.appendChild(input);
-        section.appendChild(fieldContainer);
+        fieldsContainer.appendChild(fieldContainer);
     });
 
     return section;
 }
 
-loadContactForm();
+createContact();
