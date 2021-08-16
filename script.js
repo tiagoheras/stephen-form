@@ -20,11 +20,10 @@ function createContact() {
     contactDiv.appendChild(createFormSection('Primary Contact', ['First Name', 'Last Name', 'Position', 'Telephone', 'Mobile', 'Email']));
     contactDiv.appendChild(createFormSection(`Account Address ${addressCount}`, ['Address Line 1', 'Address Line 2', 'Address Line 3', 'City', 'Country', 'Postcode'], 'address'));
 
-    const addressBtn = document.createElement('button');
-    addressBtn.innerText = 'Add Address';
-
     form.appendChild(contactDiv);
 
+    const addressBtn = document.createElement('button');
+    addressBtn.innerText = 'Add Address';
     addressBtn.addEventListener('click', (e) => {
         e.preventDefault();
         addressCount = contactDiv.querySelectorAll('section.account-address').length + 1;
@@ -76,10 +75,11 @@ function createFormSection(title, fields, type) {
     const section = document.createElement('section');
     const header = document.createElement('h2');
 
+    section.id = formatText(title);
+    header.innerText = title;
+
     if (type === 'address') {
-        section.id = formatText(title);
         section.className = 'account-address';
-        header.innerText = title;
 
         const closeBtn = document.createElement('button');
         closeBtn.innerText = 'X';
@@ -90,14 +90,11 @@ function createFormSection(title, fields, type) {
         })
 
         section.appendChild(closeBtn);
-    } else {
-        section.id = formatText(title);
-        header.innerText = title;
     }
 
     const fieldsContainer = document.createElement('div');
     fieldsContainer.className = "fields-container";
-
+    
     section.appendChild(header);
     section.appendChild(fieldsContainer);
 
@@ -110,7 +107,6 @@ function createFormSection(title, fields, type) {
         label.innerText = field;
 
         const input = document.createElement('input');
-
         if (type === 'address') {
             input.name = `contact[${contactCount}]address[${title.charAt(title.length - 1)}][${formatText(field)}]`;
         } else {
