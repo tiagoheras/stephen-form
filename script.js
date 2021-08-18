@@ -1,42 +1,42 @@
 const form = document.querySelector('form');
 
-let contactCount = 0;
+let partnerCount = 0;
 
-function createContact() {
-    contactCount += 1;
+function createPartner() {
+    partnerCount += 1;
 
-    const contactDiv = document.createElement('div');
-    contactDiv.id = `contact-${contactCount}`;
-    contactDiv.className = 'contact';
+    const partnerDiv = document.createElement('div');
+    partnerDiv.id = `partner-${partnerCount}`;
+    partnerDiv.className = 'partner';
 
     let addressCount = 1;
 
     const heading = document.createElement('h1');
-    heading.className = 'contact-heading';
-    heading.innerText = `Contact Nº ${contactCount}`;
+    heading.className = 'partner-heading';
+    heading.innerText = `Partner Nº ${partnerCount}`;
 
-    contactDiv.appendChild(heading);
-    if (contactCount > 1) {
-        console.log(contactCount);
-        contactDiv.appendChild(createCloseBtn());
+    partnerDiv.appendChild(heading);
+    if (partnerCount > 1) {
+        console.log(partnerCount);
+        partnerDiv.appendChild(createCloseBtn());
     }
-    contactDiv.appendChild(createFormSection('Business Partner Details', ['Business Partner Name', 'Type', 'Trade', 'Reg Number', 'VAT Number', 'Credit', 'Discount', 'Uplift', 'Rebate']));
-    contactDiv.appendChild(createFormSection('Supplier Account Details', ['Supplier Account Number', 'Bank Name', 'Bank Account Number', 'Sort Code']));
-    contactDiv.appendChild(createFormSection('Primary Contact', ['First Name', 'Last Name', 'Position', 'Telephone', 'Mobile', 'Email']));
-    contactDiv.appendChild(createFormSection(`Account Address ${addressCount}`, ['Address Line 1', 'Address Line 2', 'Address Line 3', 'City', 'Country', 'Postcode'], 'address'));
+    partnerDiv.appendChild(createFormSection('Business Partner Details', ['Business Partner Name', 'Type', 'Trade', 'Reg Number', 'VAT Number', 'Credit', 'Discount', 'Uplift', 'Rebate']));
+    partnerDiv.appendChild(createFormSection('Supplier Account Details', ['Supplier Account Number', 'Bank Name', 'Bank Account Number', 'Sort Code']));
+    partnerDiv.appendChild(createFormSection('Primary Contact', ['First Name', 'Last Name', 'Position', 'Telephone', 'Mobile', 'Email']));
+    partnerDiv.appendChild(createFormSection(`Account Address ${addressCount}`, ['Address Line 1', 'Address Line 2', 'Address Line 3', 'City', 'Country', 'Postcode'], 'address'));
 
-    form.appendChild(contactDiv);
+    form.appendChild(partnerDiv);
 
     const addressBtn = document.createElement('button');
     addressBtn.innerText = 'Add Address';
     addressBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        addressCount = contactDiv.querySelectorAll('section.account-address').length + 1;
+        addressCount = partnerDiv.querySelectorAll('section.account-address').length + 1;
         const addressSection = createFormSection(`Account Address ${addressCount}`, ['Address Line 1', 'Address Line 2', 'Address Line 3', 'City', 'Country', 'Postcode'], 'address');
-        contactDiv.insertBefore(addressSection, addressBtn);
+        partnerDiv.insertBefore(addressSection, addressBtn);
     })
 
-    contactDiv.appendChild(addressBtn);
+    partnerDiv.appendChild(addressBtn);
 
     createButtons();
 }
@@ -49,8 +49,8 @@ function createButtons() {
     const submitBtn = document.createElement('button');
     submitBtn.innerText = 'Submit';
 
-    const addContact = document.createElement('button');
-    addContact.innerText = 'New Contact';
+    const addpartner = document.createElement('button');
+    addpartner.innerText = 'New partner';
 
     submitBtn.addEventListener('click', (e) => {
         e.preventDefault();
@@ -60,14 +60,14 @@ function createButtons() {
         console.log({ value });
     })
 
-    addContact.addEventListener('click', (e) => {
+    addpartner.addEventListener('click', (e) => {
         e.preventDefault();
         submitBtn.remove();
-        addContact.remove();
-        createContact();
+        addpartner.remove();
+        createpartner();
     })
 
-    form.appendChild(addContact);
+    form.appendChild(addpartner);
     form.appendChild(submitBtn);
 }
 
@@ -110,9 +110,9 @@ function createFormSection(title, fields, type) {
 
         const input = document.createElement('input');
         if (type === 'address') {
-            input.name = `contact[${contactCount}]address[${title.charAt(title.length - 1)}][${formatText(field)}]`;
+            input.name = `partner[${partnerCount}]address[${title.charAt(title.length - 1)}][${formatText(field)}]`;
         } else {
-            input.name = `contact[${contactCount}][${formatText(field)}]`;
+            input.name = `partner[${partnerCount}][${formatText(field)}]`;
         }
 
         fieldContainer.appendChild(label);
@@ -123,4 +123,4 @@ function createFormSection(title, fields, type) {
     return section;
 }
 
-createContact();
+createPartner();

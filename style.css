@@ -7,10 +7,9 @@ body {
 form {
     width: 90%;
     margin: auto;
-
 }
 
-.contact {
+.partner {
     position: relative;
 }
 
@@ -68,7 +67,7 @@ section#supplier-account-details .fields-container {
     grid-template-columns: repeat(2, 1fr);
 }
 
-section#primary-contact .fields-container {
+section#primary-partner .fields-container {
     grid-template-columns: repeat(6, 1fr);
 }
 
